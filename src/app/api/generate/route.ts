@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     // Build prompt & call OpenAI
     const prompt = generateBlogPrompt(parsed.data.topic);
     const response = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o',
       messages: [
         { role: 'system', content: 'You are a helpful blog-writing assistant.' },
         { role: 'user', content: prompt },

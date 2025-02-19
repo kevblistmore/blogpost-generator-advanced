@@ -9,8 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tiptap/extension-placeholder": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
+    "@types/mongoose": "^5.11.96",
+    "date-fns": "^4.1.0",
+    "mongodb": "^6.13.0",
+    "mongoose": "^8.10.1",
     "next": "15.1.7",
     "openai": "^3.2.1",
     "react": "^19.0.0",
@@ -20,6 +25,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/date-fns": "^2.5.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
