@@ -24,7 +24,7 @@
 
 # **Final Thoughts**
 
-With these modifications and the provided **README.md** template, you now have a **comprehensive, production-ready** AI-powered blog generator. This should impress any interviewer by showcasing:
+  we now have a **comprehensive, production-ready** AI-powered blog generator - by showcasing:
 
 - **Practical Full-Stack Skills** (Next.js, Tailwind, APIs)  
 - **Prompt Engineering & LLM Integration** (OpenAI)  
