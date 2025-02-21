@@ -64,3 +64,16 @@ export function generateBlogPrompt(topic: string, style: string = 'professional'
   Content...
   `;
 }
+
+export function generatePromptSuggestionsPrompt(topic: string): string {
+  return `
+  Generate 5 relevant blog topic suggestions similar to "${topic}".
+  Requirements:
+  1. Topics should be closely related but not identical
+  2. Include different angles or aspects
+  3. Keep titles between 6-10 words
+  4. Format as a JSON array of strings
+  
+  Example: ["Latest Trends in AI Content Creation", "Ethical Considerations in Modern Content Writing"]
+  `;
+}
