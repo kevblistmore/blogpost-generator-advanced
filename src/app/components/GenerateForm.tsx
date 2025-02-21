@@ -12,7 +12,7 @@ export default function GenerateForm() {
   const [selectedBlog, setSelectedBlog] = useState<any>(null);
   const [viewMode, setViewMode] = useState(false);
 
-  // Load initial blogs
+  // Load initial blogs (history)
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
@@ -26,7 +26,7 @@ export default function GenerateForm() {
     fetchBlogs();
   }, []);
 
-  // Generate a new blog post with a temporary ID and timestamp
+  // Generate a new blog post
   const handleGenerate = async () => {
     setIsGenerating(true);
     try {
@@ -36,12 +36,13 @@ export default function GenerateForm() {
         body: JSON.stringify({ topic })
       });
       const data = await res.json();
-      setSelectedBlog({
+      const tempBlog = {
         ...data,
         _id: `temp-${Date.now()}`, // Temporary ID for unsaved posts
         createdAt: new Date().toISOString()
-      });
-      setViewMode(false); // Force edit mode for new generations
+      };
+      setSelectedBlog(tempBlog);
+      setViewMode(false); // Start in edit mode
       toast.success('Blog generated!');
     } catch (error) {
       toast.error('Generation failed');
@@ -50,7 +51,7 @@ export default function GenerateForm() {
     }
   };
 
-  // Save the blog post (including images) and update the history panel
+  // Save the blog post and update history without duplicates
   const handleSave = async (content: string) => {
     try {
       const res = await fetch('/api/blogs', {
@@ -59,8 +60,11 @@ export default function GenerateForm() {
         body: JSON.stringify({ content, topic })
       });
       const newBlog = await res.json();
-      // Update both the blogs list and selected blog with saved data
-      setBlogs(prev => [newBlog, ...prev]);
+      // Remove any duplicate entry (if temporary blog exists) and add the new one
+      setBlogs(prev => {
+        const filtered = prev.filter(b => b._id !== newBlog._id);
+        return [newBlog, ...filtered];
+      });
       setSelectedBlog(newBlog);
       setViewMode(true); // Switch to view mode after saving
       toast.success('Blog saved!');
@@ -69,6 +73,7 @@ export default function GenerateForm() {
     }
   };
 
+  // Delete the blog post and reset the editor
   const handleDelete = async (id: string) => {
     try {
       await fetch('/api/blogs', {
@@ -77,6 +82,8 @@ export default function GenerateForm() {
         body: JSON.stringify({ id })
       });
       setBlogs(prev => prev.filter(b => b._id !== id));
+      setSelectedBlog(null);
+      setViewMode(false);
       toast.success('Blog deleted');
     } catch (error) {
       toast.error('Deletion failed');
@@ -105,9 +112,9 @@ export default function GenerateForm() {
 
           {isGenerating && <LoadingSkeleton />}
 
-          {selectedBlog && (
+          {selectedBlog ? (
             <BlogEditor
-              key={selectedBlog._id} // Forces remount when a new blog is selected
+              key={selectedBlog._id} // Force remount on new selection
               initialContent={selectedBlog.content}
               onSave={handleSave}
               onRegenerate={handleGenerate}
@@ -116,6 +123,10 @@ export default function GenerateForm() {
               onViewModeChange={setViewMode}
               topic={topic}
             />
+          ) : (
+            <div className="text-center text-gray-500 py-10">
+              No blog selected. Generate a new blog to begin.
+            </div>
           )}
         </div>
       </div>
@@ -123,14 +134,16 @@ export default function GenerateForm() {
       <div className="lg:col-span-1">
         <HistoryPanel
           blogs={blogs}
-          onSelect={setSelectedBlog}
+          onSelect={(blog) => {
+            setSelectedBlog(blog);
+            setViewMode(true); // Open in view mode when selecting from history
+          }}
           onDelete={handleDelete}
         />
       </div>
     </div>
   );
 }
-
 
 // 'use client';
 // import { useState, useEffect } from 'react';
@@ -160,6 +173,7 @@ export default function GenerateForm() {
 //     fetchBlogs();
 //   }, []);
 
+//   // Generate a new blog post with a temporary ID and timestamp
 //   const handleGenerate = async () => {
 //     setIsGenerating(true);
 //     try {
@@ -168,9 +182,13 @@ export default function GenerateForm() {
 //         headers: { 'Content-Type': 'application/json' },
 //         body: JSON.stringify({ topic })
 //       });
-
 //       const data = await res.json();
-//       setSelectedBlog(data);
+//       setSelectedBlog({
+//         ...data,
+//         _id: `temp-${Date.now()}`, // Temporary ID for unsaved posts
+//         createdAt: new Date().toISOString()
+//       });
+//       setViewMode(false); // Force edit mode for new generations
 //       toast.success('Blog generated!');
 //     } catch (error) {
 //       toast.error('Generation failed');
@@ -179,6 +197,7 @@ export default function GenerateForm() {
 //     }
 //   };
 
+//   // Save the blog post (including images) and update the history panel
 //   const handleSave = async (content: string) => {
 //     try {
 //       const res = await fetch('/api/blogs', {
@@ -186,10 +205,11 @@ export default function GenerateForm() {
 //         headers: { 'Content-Type': 'application/json' },
 //         body: JSON.stringify({ content, topic })
 //       });
-      
 //       const newBlog = await res.json();
+//       // Update both the blogs list and selected blog with saved data
 //       setBlogs(prev => [newBlog, ...prev]);
-//       setViewMode(true);
+//       setSelectedBlog(newBlog);
+//       setViewMode(true); // Switch to view mode after saving
 //       toast.success('Blog saved!');
 //     } catch (error) {
 //       toast.error('Save failed');
@@ -234,10 +254,13 @@ export default function GenerateForm() {
 
 //           {selectedBlog && (
 //             <BlogEditor
+//               key={selectedBlog._id} // Forces remount when a new blog is selected
 //               initialContent={selectedBlog.content}
 //               onSave={handleSave}
+//               onRegenerate={handleGenerate}
 //               onDelete={() => handleDelete(selectedBlog._id)}
 //               viewMode={viewMode}
+//               onViewModeChange={setViewMode}
 //               topic={topic}
 //             />
 //           )}
@@ -254,3 +277,5 @@ export default function GenerateForm() {
 //     </div>
 //   );
 // }
+
+
