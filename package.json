@@ -17,6 +17,7 @@
     "@types/mongoose": "^5.11.96",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.4.7",
+    "lucide-react": "^0.475.0",
     "marked": "^15.0.7",
     "mongodb": "^6.13.0",
     "mongoose": "^8.10.1",
