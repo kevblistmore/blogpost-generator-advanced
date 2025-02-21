@@ -31,15 +31,16 @@ export async function POST(request: NextRequest) {
         { role: 'user', content: prompt },
       ],
       temperature: 0.7,
-      max_tokens: 600,
+      max_tokens: 1000,
     });
 
     const content = response.data.choices[0]?.message?.content || '';
-
+    console.log("OpenAI Response:", content);
     // Optional: sanitize the output to remove markdown artifacts
-    const sanitized = sanitizeOutput(content);
+    // const sanitized = sanitizeOutput(content);
 
-    return NextResponse.json({ content: sanitized });
+    // return NextResponse.json({ content: sanitized });
+    return NextResponse.json({ content });
   } catch (error) {
     console.error('Error generating blog post:', error);
     return NextResponse.json({ error: 'Failed to generate content' }, { status: 500 });

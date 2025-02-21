@@ -1,5 +1,4 @@
-// // // components/BlogEditor.tsx
-
+// // // // components/BlogEditor.tsx
 'use client';
 import { useEffect, useState } from 'react';
 import { EditorContent, useEditor, Editor } from '@tiptap/react';
@@ -8,6 +7,8 @@ import Placeholder from '@tiptap/extension-placeholder';
 import EditorToolbar from './EditorToolbar';
 import Image from '@tiptap/extension-image';
 import { fetchSuggestedImages } from '../lib/image-api';
+import { motion } from 'framer-motion';
+import FeedbackButtons from './FeedBackButtons';
 
 interface BlogEditorProps {
   initialContent?: string;
@@ -34,8 +35,11 @@ export default function BlogEditor({
   const editor: Editor | null = useEditor({
     extensions: [
       StarterKit,
-      Placeholder.configure({ placeholder: 'Start writing your blog post...' }),
-      Image.configure({ inline: true })
+      Placeholder.configure({ placeholder: 'Start writing your blog post (use paragraphs, headings, etc.)...' }),
+      Image.configure({
+        inline: true,
+        HTMLAttributes: { class: 'float-right ml-4 max-w-full md:max-w-sm mb-4' }
+      }),
     ],
     content,
     editable: !viewMode,
@@ -47,12 +51,10 @@ export default function BlogEditor({
       }
     },
     onUpdate: ({ editor }) => {
-      const html = editor.getHTML();
-      setContent(html);
+      setContent(editor.getHTML());
     },
   });
 
-  // Update editor content if initialContent changes
   useEffect(() => {
     if (editor && initialContent) {
       editor.commands.setContent(initialContent);
@@ -60,7 +62,6 @@ export default function BlogEditor({
     }
   }, [initialContent, editor]);
 
-  // Load suggested images based on the topic
   useEffect(() => {
     const loadImages = async () => {
       if (topic) {
@@ -73,7 +74,6 @@ export default function BlogEditor({
 
   return (
     <div className="border rounded-lg shadow-sm bg-white">
-      {/* Render the toolbar only in edit mode */}
       {!viewMode && (
         <EditorToolbar
           editor={editor}
@@ -83,31 +83,41 @@ export default function BlogEditor({
         />
       )}
 
-      {/* Wrap the editor content in a div with "prose" for better formatting */}
-      <div className="p-4">
-        <EditorContent editor={editor} />
-      </div>
+      {/* Wrap EditorContent in a container that uses the "prose" class */}
+      <motion.div
+        className="p-4 prose"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="p-4 prose">
+          <EditorContent editor={editor} />
+        </div>
+      </motion.div>
 
-      {/* In view mode, show the Edit and Delete buttons */}
       {viewMode && (
-        <div className="p-4 border-t flex gap-4">
-          <button
-            onClick={() => onViewModeChange(false)}
-            className="text-blue-600 hover:underline"
-          >
-            Edit Post
-          </button>
-          <button
-            onClick={onDelete}
-            className="text-red-600 hover:underline"
-          >
-            Delete Post
-          </button>
+        <div className="p-4 border-t flex justify-between items-center">
+          <div className="flex gap-4">
+            <button
+              onClick={() => onViewModeChange(false)}
+              className="text-blue-600 hover:underline"
+            >
+              Edit Post
+            </button>
+            <button
+              onClick={onDelete}
+              className="text-red-600 hover:underline"
+            >
+              Delete Post
+            </button>
+          </div>
+          <FeedbackButtons content={content} />
         </div>
       )}
     </div>
   );
 }
+
 
 // 'use client';
 // import { useEffect, useState } from 'react';
@@ -143,7 +153,7 @@ export default function BlogEditor({
 //   const editor: Editor | null = useEditor({
 //     extensions: [
 //       StarterKit,
-//       Placeholder.configure({ placeholder: 'Start writing...' }),
+//       Placeholder.configure({ placeholder: 'Start writing your blog post...' }),
 //       Image.configure({ inline: true })
 //     ],
 //     content,
@@ -171,18 +181,18 @@ export default function BlogEditor({
 
 //   // Load suggested images based on the topic
 //   useEffect(() => {
-//     if (topic) {
-//       const loadImages = async () => {
+//     const loadImages = async () => {
+//       if (topic) {
 //         const images = await fetchSuggestedImages(topic);
 //         setSuggestedImages(images);
-//       };
-//       loadImages();
-//     }
+//       }
+//     };
+//     loadImages();
 //   }, [topic]);
 
 //   return (
 //     <div className="border rounded-lg shadow-sm bg-white">
-//       {/* When not in view mode, show the toolbar with formatting buttons and image suggestions */}
+//       {/* Render the toolbar only in edit mode */}
 //       {!viewMode && (
 //         <EditorToolbar
 //           editor={editor}
@@ -192,9 +202,12 @@ export default function BlogEditor({
 //         />
 //       )}
 
-//       <EditorContent editor={editor} />
+//       {/* Wrap the editor content in a div with "prose" for better formatting */}
+//       <div className="p-4">
+//         <EditorContent editor={editor} />
+//       </div>
 
-//       {/* When in view mode, show Edit and Delete buttons */}
+//       {/* In view mode, show the Edit and Delete buttons */}
 //       {viewMode && (
 //         <div className="p-4 border-t flex gap-4">
 //           <button

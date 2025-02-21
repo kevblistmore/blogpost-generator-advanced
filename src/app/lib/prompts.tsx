@@ -46,7 +46,8 @@ export function generateBlogPrompt(topic: string, style: string = 'professional'
     - Actionable advice
     - Relevant statistics (mark with *)
   4. Formatting:
-    - No markdown
+    -Return the blog post in markdown format, with proper headings, paragraphs, and list formatting.
+    - use paragraph formatting neat and clean
     - Wrap statistics with **asterisks**
     - Use line breaks between sections
     
