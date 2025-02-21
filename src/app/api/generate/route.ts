@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     });
 
     const content = response.data.choices[0]?.message?.content || '';
-    console.log("OpenAI Response:", content);
+    //console.log("OpenAI Response:", content);
     // Optional: sanitize the output to remove markdown artifacts
     // const sanitized = sanitizeOutput(content);
 

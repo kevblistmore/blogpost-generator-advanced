@@ -128,47 +128,47 @@ export default function BlogEditor({
   };
 
   // 6. Delete an image from the modal
-  const deleteImage = () => {
-    if (!editor || !selectedModalImage) return;
-  
-    const { src } = selectedModalImage;
-    const { doc, tr } = editor.state;
-    let foundPos = null;
-  
-    // ✅ 1. Traverse the doc to find the exact image node by `src`
-    doc.descendants((node, pos) => {
-      if (node.type.name === "image" && node.attrs.src === src) {
-        foundPos = pos;
-        return false; // Stop traversal once found
-      }
-      return true;
-    });
-  
-    if (foundPos === null) {
-      console.warn("Image not found in document. It may have been already deleted.");
-      setSelectedModalImage(null);
-      return;
+const deleteImage = () => {
+  if (!editor || !selectedModalImage) return;
+
+  const { src } = selectedModalImage;
+  const { doc, tr } = editor.state;
+  let foundPos = null;
+
+  // ✅ 1. Traverse the doc to find the exact image node by `src`
+  doc.descendants((node, pos) => {
+    if (node.type.name === "image" && node.attrs.src === src) {
+      foundPos = pos;
+      return false; // Stop traversal once found
     }
-  
-    console.log("Found image at position:", foundPos);
-  
-    // ✅ 2. Set selection on the found node
-    editor.view.dispatch(tr.setSelection(NodeSelection.create(doc, foundPos)));
-  
-    // ✅ 3. Delete the node (Pass "image" as the argument)
-    const deleted = editor.commands.deleteNode("image");
-  
-    if (deleted) {
-      console.log("Image successfully deleted");
-    } else {
-      console.warn("deleteNode failed. Trying deleteRange...");
-      editor.chain().focus().deleteRange({ from: foundPos, to: foundPos + 1 }).run();
-    }
-  
-    // ✅ 4. Close modal after deletion
+    return true;
+  });
+
+  if (foundPos === null) {
+    console.warn("Image not found in document. It may have been already deleted.");
     setSelectedModalImage(null);
-  };
-  
+    return;
+  }
+
+  console.log("Found image at position:", foundPos);
+
+  // ✅ 2. Set selection on the found node
+  editor.view.dispatch(tr.setSelection(NodeSelection.create(doc, foundPos)));
+
+  // ✅ 3. Delete the node (Pass "image" as the argument)
+  const deleted = editor.commands.deleteNode("image");
+
+  if (deleted) {
+    console.log("Image successfully deleted");
+  } else {
+    console.warn("deleteNode failed. Trying deleteRange...");
+    editor.chain().focus().deleteRange({ from: foundPos, to: foundPos + 1 }).run();
+  }
+
+  // ✅ 4. Close modal after deletion
+  setSelectedModalImage(null);
+};
+
 
   return (
     <>
