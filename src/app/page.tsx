@@ -1,8 +1,18 @@
 // app/page.tsx
 'use client';
-import GenerateForm from './components/GenerateForm';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function Home() {
+  const router = useRouter();
+  const [query, setQuery] = useState('');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Navigate to the generate page with the query in the URL
+    router.push(`/generate?q=${encodeURIComponent(query)}`);
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -15,45 +25,31 @@ export default function Home() {
             Generate, edit, and save professional content in minutes.
           </p>
         </section>
-        <GenerateForm />
+        {/* Search bar */}
+        <form onSubmit={handleSubmit} className="flex gap-2 mb-8">
+          <input
+            type="text"
+            placeholder="Enter blog title here"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="flex-1 p-3 border rounded-lg"
+          />
+          <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            Search
+          </button>
+        </form>
+        {/* Two additional boxes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="p-4 border rounded-lg text-center">
+            <h2 className="text-xl font-semibold mb-2">Blog Templates</h2>
+            <p>Template A, Template B, Template C, ...</p>
+          </div>
+          <div className="p-4 border rounded-lg text-center">
+            <h2 className="text-xl font-semibold mb-2">Suggested Blog Queries</h2>
+            <p>Query X, Query Y, Query Z, ...</p>
+          </div>
+        </div>
       </div>
     </main>
   );
 }
-// 'use client';
-
-// import GenerateForm from './components/GenerateForm';
-
-// export default function Home() {
-//   return (
-//     <main className="min-h-screen bg-gradient-to-b from-white to-gray-50 flex flex-col items-center">
-//       {/* Hero Section */}
-//       <section className="w-full max-w-4xl flex flex-col items-center text-center mt-16 mb-8 px-4">
-//         <h1 className="text-5xl font-extrabold mb-3 
-//           text-transparent bg-clip-text 
-//           bg-gradient-to-r from-blue-600 to-indigo-600
-//         ">
-//           AI Blog Post Generator
-//         </h1>
-//         <p className="text-gray-600 max-w-xl">
-//           Instantly craft engaging blog posts. Enter a topic, and let AI do the heavy lifting!
-//         </p>
-//       </section>
-
-//       {/* Content Section */}
-//       <section className="w-full max-w-2xl bg-white rounded-lg shadow-md p-8">
-//         <GenerateForm />
-//       </section>
-
-//       <section className="max-w-3xl mx-auto mt-8 mb-16 px-4 text-center">
-//         <h2 className="text-2xl font-bold mb-2">How It Works</h2>
-//         <p className="text-gray-600">
-//           This AI tool uses advanced language models to structure an entire blog post around your topic. 
-//           Enjoy a clear introduction, well-organized sections, and actionable tips—then fine-tune the final draft 
-//           with our built-in editor.
-//         </p>
-//       </section>
-//     </main>
-//   );
-// }
-
