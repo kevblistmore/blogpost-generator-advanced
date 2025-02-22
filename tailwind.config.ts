@@ -1,6 +1,5 @@
-import type { Config } from "tailwindcss";
-
-export default {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -12,7 +11,10 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      maxWidth: {
+        '15xl': '2400px', // Custom max width
+      },
     },
   },
   plugins: [require('@tailwindcss/typography')],
-} satisfies Config;
+};

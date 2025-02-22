@@ -1,3 +1,4 @@
+//src/app/api/blogs/route.ts
 import { connectDB } from '../../lib/db';
 import { Blog } from '../../lib/db';
 import { NextResponse } from 'next/server';

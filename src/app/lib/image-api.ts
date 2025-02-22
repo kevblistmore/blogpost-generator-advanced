@@ -28,5 +28,5 @@ export async function fetchSuggestedImages(topic: string): Promise<string[]> {
     const data = await res.json();
     const urls = data.results?.map((img: any) => img.urls.regular) || [];
     
-    return NextResponse.json({ urls });
+    return new Response(JSON.stringify({ urls }));
   }

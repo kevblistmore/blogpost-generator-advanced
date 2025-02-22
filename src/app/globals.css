@@ -46,3 +46,19 @@ body {
 .prose p {
   @apply mb-4;
 }
+
+/* global.css */
+#control-sidebar.collapsed {
+  width: 4rem;
+  overflow: hidden;
+}
+
+/* Ensure grid children respect widths */
+.grid {
+  grid-template-columns: min-content 1fr min-content;
+}
+
+/* Prevent content from creating minimum widths */
+.min-w-0 {
+  min-width: 0;
+}

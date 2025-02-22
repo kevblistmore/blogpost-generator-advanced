@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Travel Blog",
+    "category": "Travel",
+    "description": "Explore destinations with engaging travel stories.",
+    "image": "/sample-images/Travel-Blogger.jpg",
+    "content": "<h1>Welcome to Travel Blog</h1><p>This sample blog is about travel. Enjoy breathtaking journeys and tips! <img src=\"/sample-images/Travel-Blogger.jpg\" alt=\"Travel\" /></p>",
+    "link": "/generate?q=travel&sample=true"
+  },
+  {
+    "id": 2,
+    "title": "Finance Insights",
+    "category": "Finance",
+    "description": "Get the latest tips on investments and financial trends.",
+    "image": "/sample-images/Financial-Insights.png",
+    "content": "<h1>Finance Insights</h1><p>This sample blog is about finance. Learn investment strategies and trends. <img src=\"/sample-images/Financial-Insights.png\" alt=\"Finance\" /></p>",
+    "link": "/generate?q=finance&sample=true"
+  },
+  {
+    "id": 3,
+    "title": "Content Writing",
+    "category": "Content Writing",
+    "description": "Discover creative writing templates for your next post.",
+    "image": "/sample-images/Content-Writing.jpg",
+    "content": "<h1>Content Writing</h1><p>This sample blog is about content writing. Boost your creativity and writing skills. <img src=\"/sample-images/Content-Writing.jpg\" alt=\"Content Writing\" /></p>",
+    "link": "/generate?q=content&sample=true"
+  },
+  {
+    "id": 4,
+    "title": "Music Reviews",
+    "category": "Music",
+    "description": "Share your passion for music with stylish reviews.",
+    "image": "/sample-images/Music-Review.png",
+    "content": "<h1>Music Reviews</h1><p>This sample blog is about music. Discover the latest in music reviews and trends. <img src=\"/sample-images/Music-Review.png\" alt=\"Music Reviews\" /></p>",
+    "link": "/generate?q=music&sample=true"
+  }
+]

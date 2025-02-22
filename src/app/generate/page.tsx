@@ -1,31 +1,58 @@
+// app/generate/page.tsx
 "use client";
 import { useSearchParams } from "next/navigation";
 import GenerateForm from "../components/GenerateForm";
 
 export default function GeneratePage() {
-  // Read the query param `q` (e.g. /generate?q=SomeTopic)
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
+  const isSample = searchParams.get("sample") === "true";
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-10xl mx-auto px-4 py-8">
         <section className="text-center mb-12">
           <h1 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             AI Blog Generator
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             Transform your ideas into polished blog posts with AI-powered writing assistance.
-            Generate, edit, and save professional content in minutes.
           </p>
         </section>
-
-        {/* Pass the new query to GenerateForm */}
-        <GenerateForm initialQuery={initialQuery} />
+        <GenerateForm initialQuery={initialQuery} isSample={isSample} />
       </div>
     </main>
   );
 }
+
+// "use client";
+// import { useSearchParams } from "next/navigation";
+// import GenerateForm from "../components/GenerateForm";
+
+// export default function GeneratePage() {
+//   // Read the query param `q` (e.g. /generate?q=SomeTopic)
+//   const searchParams = useSearchParams();
+//   const initialQuery = searchParams.get("q") || "";
+
+//   return (
+//     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+//       <div className="max-w-10xl mx-auto px-4 py-8">
+//         <section className="text-center mb-12">
+//           <h1 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+//             AI Blog Generator
+//           </h1>
+//           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+//             Transform your ideas into polished blog posts with AI-powered writing assistance.
+//             Generate, edit, and save professional content in minutes.
+//           </p>
+//         </section>
+
+//         {/* Pass the new query to GenerateForm */}
+//         <GenerateForm initialQuery={initialQuery} />
+//       </div>
+//     </main>
+//   );
+// }
 
 // 'use client';
 
