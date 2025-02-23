@@ -30,6 +30,9 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
   const [currentVersion, setCurrentVersion] = useState(0);
   const [pendingSuggestion, setPendingSuggestion] = useState<string | null>(null);
   const [originalContent, setOriginalContent] = useState<string>("");
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [saveTitle, setSaveTitle] = useState(title);
+
   
 
   // Helper function: Always add a version using a functional update
@@ -206,15 +209,15 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
     addVersion(newContent, "Refined version");
   };
 
-  const handleSave = async (content: string) => {
+  const handleSave = async (saveName: string) => {
     try {
       const res = await fetch("/api/blogs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          content, 
+          content: selectedBlog.content, 
           topic, 
-          title,
+          title: saveName,
           versions
        }),
       });
@@ -230,7 +233,15 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
       toast.error("Save failed");
     }
   };
+  const openSaveModal = () => {
+    setSaveTitle(title || "Untitled Blog"); // pre-populate with current title or default
+    setShowSaveModal(true);
+  };
 
+  const openSaveModalWrapper = async (_content: string): Promise<void> => {
+    openSaveModal();
+  };
+  
   const handleDelete = async (id: string) => {
     try {
       await fetch("/api/blogs", {
@@ -458,7 +469,7 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
               <BlogEditor
                 key={selectedBlog._id}
                 initialContent={selectedBlog.content}
-                onSave={handleSave}
+                onSave={async (content: string) => { openSaveModal(); }}
                 onRegenerate={selectedBlog ? handleRegenerate : handleGenerate}
                 onDelete={() => handleDelete(selectedBlog._id)}
                 viewMode={viewMode}
@@ -487,6 +498,40 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
         />
         <SidebarToggle />
       </div>
+      {/* ----------------------------- */}
+      {/* Save Modal (Step 3) */}
+      {showSaveModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg">
+            <h2 className="mb-4 text-lg font-semibold">Enter Save Name</h2>
+            <input
+              type="text"
+              value={saveTitle}
+              onChange={(e) => setSaveTitle(e.target.value)}
+              placeholder="Enter blog title..."
+              className="border p-2 rounded w-full mb-4"
+            />
+            <div className="flex gap-4">
+              <button
+                onClick={() => {
+                  setShowSaveModal(false);
+                  handleSave(saveTitle); // This uses the same logic as before
+                }}
+                className="px-4 py-2 bg-green-500 text-white rounded"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setShowSaveModal(false)}
+                className="px-4 py-2 bg-red-500 text-white rounded"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+  
     </div>
   );
 }

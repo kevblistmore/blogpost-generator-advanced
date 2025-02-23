@@ -18,7 +18,7 @@ const blogSchema = new mongoose.Schema({
   content: { type: String, required: true },
   images: [String],
   topic: String,
-  title: String,
+  slug: { type: String, unique: true },  // new field
   versions: [versionSchema],
   currentVersion: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
