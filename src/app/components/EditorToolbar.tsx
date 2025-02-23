@@ -1,3 +1,5 @@
+
+
 //src/app/components/EditorToolbar.tsx
 
 'use client';
@@ -12,7 +14,7 @@ interface EditorToolbarProps {
   onSave?: () => void;
   onRegenerate?: () => void;
   onImageSelect: (src: string) => void;
-  versions?: { content: string; timestamp: string }[];
+  versions?: { content: string; prompt: string; timestamp: string }[];
   onVersionSelect?: (versionContent: string) => void;
 }
 
@@ -135,13 +137,27 @@ export default function EditorToolbar({
         <div className="mt-2 border-t pt-2">
           <h4 className="font-semibold">Revision History</h4>
           {versions && versions.length > 0 ? (
-            <ul className="list-disc pl-5">
-              {versions.map((version, idx) => (
-                <li key={idx} className="cursor-pointer hover:underline" onClick={() => onVersionSelect && onVersionSelect(version.content)}>
-                  {version.timestamp}
-                </li>
-              ))}
-            </ul>
+            <div className="border-b p-2 bg-gray-50 version-toggle">
+              <ul className="list-disc pl-5">
+                {versions.map((version, idx) => (
+                  <li 
+                    key={idx} 
+                    onClick={() => onVersionSelect?.(version.content)}
+                    className="cursor-pointer hover:bg-gray-100 p-2 rounded-md"
+                    >
+                    <div className="flex items-center gap-2">
+                    <span className="font-medium">Version {idx + 1}</span>
+                    <span className="text-xs text-gray-500">
+                      {new Date(version.timestamp).toLocaleTimeString()}
+                    </span>
+                    </div>
+                    <div className="text-xs text-gray-500 truncate">
+                      {version.prompt}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ) : (
             <p className="text-sm text-gray-500">No revisions available.</p>
           )}
@@ -150,7 +166,7 @@ export default function EditorToolbar({
       {/* Action Buttons */}
       <div className="flex gap-2 border-t pt-2">
         <button
-          onClick={onRegenerate}
+          onClick={() => onRegenerate?.()}
           className="flex-1 px-3 py-1.5 text-sm rounded-md bg-green-100 text-green-600 hover:bg-green-200"
         >
           Regenerate

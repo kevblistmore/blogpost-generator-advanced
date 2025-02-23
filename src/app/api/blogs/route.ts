@@ -18,16 +18,21 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const { content, topic } = await req.json();
+    const { content, topic, title, versions } = await req.json();
     await connectDB();
     
     const blog = new Blog({
       content,
       topic,
+      title,
+      versions: [{ content, timestamp: new Date(), isActive: true }],
+      currentVersion: 0,
+      createdAt: new Date(),
       images: []
     });
 
     await blog.save();
+    
     return NextResponse.json(blog.toObject());
   } catch (error) {
     return NextResponse.json(

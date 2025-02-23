@@ -24,7 +24,10 @@ Please provide a refined version of the blog post based on the feedback.`;
     });
 
     const refinedContent = response.data.choices[0]?.message?.content || "";
-    return NextResponse.json({ refinedContent });
+    return NextResponse.json({ 
+      refinedContent,
+      previousContent: content // Include previous content for versioning
+    });
   } catch (error) {
     console.error("Refinement error:", error);
     return NextResponse.json({ error: "Failed to refine content" }, { status: 500 });

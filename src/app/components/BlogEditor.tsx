@@ -21,7 +21,9 @@ interface BlogEditorProps {
   onViewModeChange: (mode: boolean) => void;
   topic: string;
   versions: { content: string; timestamp: string }[];
-  onVersionSelect: (versionContent: string) => void;
+  currentVersion: number;
+  onVersionChange: (versionIndex: number) => void;
+  onVersionDelete: (versionIndex: number) => void;
 }
 
 export default function BlogEditor({
@@ -32,6 +34,10 @@ export default function BlogEditor({
   viewMode = false,
   onViewModeChange,
   topic = "",
+  versions = [],
+  currentVersion = 0,
+  onVersionChange,
+  onVersionDelete,
 }: BlogEditorProps) {
   const [content, setContent] = useState(initialContent);
   const [suggestedImages, setSuggestedImages] = useState<string[]>([]);
@@ -104,6 +110,14 @@ export default function BlogEditor({
     loadImages();
   }, [topic]);
 
+  
+  useEffect(() => {
+    if (editor && versions[currentVersion]?.content) {
+      editor.commands.setContent(versions[currentVersion].content);
+      setContent(versions[currentVersion].content);
+    }
+  }, [currentVersion, versions, editor]);
+
   // 4. SAFE Insertion Helper (prevents overwriting if an image is selected)
   const insertImageSafely = (src: string) => {
     if (!editor) return;
@@ -175,6 +189,37 @@ export default function BlogEditor({
   return (
     <>
       <div className="border rounded-lg shadow-sm bg-white">
+        {/* Version Toggle Bar */}
+        <div className="border-b p-2 bg-gray-50 version-toggle">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2">
+            {versions.map((version, idx) => (
+              <div key={idx} className="flex items-center gap-2 flex-shrink-0">
+                <button
+                  onClick={() => onVersionChange(idx)}
+                  className={`px-3 py-1 text-sm rounded-md ${
+                    currentVersion === idx
+                      ? 'bg-blue-100 text-blue-600'
+                      : 'bg-gray-100 hover:bg-gray-200'
+                  }`}
+                >
+                  Version {idx + 1}
+                  <span className="ml-2 text-xs">
+                    {new Date(version.timestamp).toLocaleTimeString()}
+                  </span>
+                </button>
+                {idx > 0 && (
+                  <button
+                    onClick={() => onVersionDelete(idx)}
+                    className="text-red-500 hover:text-red-700 text-lg"
+                    title="Delete version"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
         {/* Toolbar for non-viewMode */}
         {!viewMode && (
           <EditorToolbar
