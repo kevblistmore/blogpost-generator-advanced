@@ -8,7 +8,7 @@ const RATE_LIMIT_MAX_REQUESTS = 5;   // 5 requests per IP per window
 const ipRequestCounts = new Map<string, { count: number; firstRequestTime: number }>();
 
 export function middleware(request: NextRequest) {
-  const ip = request.ip ?? request.headers.get('x-forwarded-for') ?? '127.0.0.1';
+  const ip = request.headers.get('x-real-ip') ?? request.headers.get('x-forwarded-for') ?? '127.0.0.1';
   const routeName = request.nextUrl.pathname;
 
   // Only apply rate limit for certain routes
