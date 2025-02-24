@@ -14,6 +14,7 @@ import { fetchSuggestedImages } from "../lib/image-api";
 interface BlogEditorProps {
   key: any;
   initialContent: string;
+  contentProp: string; // new prop
   onSave: (content: string) => Promise<void>;
   onRegenerate: (currentTopic?: string) => Promise<void>;
   onDelete: () => Promise<void>;
@@ -29,6 +30,7 @@ interface BlogEditorProps {
 
 export default function BlogEditor({
   initialContent = "",
+  contentProp,
   onSave,
   onRegenerate,
   onDelete,
@@ -63,7 +65,7 @@ export default function BlogEditor({
         },
       }),
     ],
-    content,
+    content:initialContent,
     // Set initial editable state based on viewMode.
     editable: !viewMode,
     editorProps: {
@@ -84,7 +86,14 @@ export default function BlogEditor({
       setContent(editor.getHTML());
     },
   });
-
+  // This effect listens for changes in contentProp and updates the editor.
+  useEffect(() => {
+    if (editor && contentProp) {
+      editor.commands.setContent(contentProp);
+      setContent(contentProp);
+    }
+  }, [contentProp, editor]);
+  
   // NEW: Update Tiptap's editable state whenever viewMode changes.
   useEffect(() => {
     if (editor) {
@@ -305,7 +314,6 @@ export default function BlogEditor({
     </>
   );
 }
-
 // "use client";
 // import { useEffect, useState } from "react";
 // import { EditorContent, useEditor, Editor } from "@tiptap/react";

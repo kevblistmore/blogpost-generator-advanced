@@ -11,11 +11,11 @@ export async function POST(request: Request) {
   try {
     const { content, feedback } = await request.json();
     const prompt = `Here is a blog post:
-        ${content}
+      ${content}
 
-        User feedback: ${feedback}
+      User feedback: ${feedback}
 
-        Please provide a refined version of the blog post based on the feedback.`;
+      Please provide a refined version of the blog post based on the feedback.`;
 
     const response = await openai.createChatCompletion({
       model: "gpt-4o",

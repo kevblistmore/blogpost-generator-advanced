@@ -30,7 +30,7 @@ export default function EditorToolbar({
 
   // Insert Image at Cursor Position
   const insertImage = (url: string) => {
-    editor.chain().focus().insertContent(`<img src="${url}" alt="Uploaded Image" />`).run();
+    editor.chain().focus().insertContent(<img src="${url}" alt="Uploaded Image" />).run();
   };
 
   // Handle Image Upload (Supports Multiple Images)
