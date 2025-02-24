@@ -9,7 +9,7 @@ export async function GET() {
     await connectDB();
     const blogs = await Blog.find().sort({ createdAt: -1 }).lean();
     return NextResponse.json(blogs);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to fetch blogs' },
       { status: 500 }
@@ -19,7 +19,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const { content, topic, title, versions } = await req.json();
+    const { content, topic, title } = await req.json();
     await connectDB();
     
     // Generate a slug using title (or fallback to topic). Append a timestamp for uniqueness.
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     await blog.save();
     
     return NextResponse.json(blog.toObject());
-  } catch (_error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to save blog' },
       { status: 500 }
@@ -54,7 +54,7 @@ export async function DELETE(req: Request) {
     await connectDB();
     await Blog.findByIdAndDelete(id);
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to delete blog' },
       { status: 500 }

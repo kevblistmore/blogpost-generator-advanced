@@ -7,7 +7,7 @@ import { Paperclip } from 'lucide-react';
 import { useState } from "react";
 
 interface EditorToolbarProps {
-  editor: any;
+  editor: Editor | null;
   suggestedImages: string[];
   onSave?: () => void;
   onRegenerate?: () => void;
@@ -25,13 +25,7 @@ export default function EditorToolbar({
   versions,
   onVersionSelect,
 }: EditorToolbarProps) {
-  const [showVersions, _setShowVersions] = useState(false);
   if (!editor) return null;
-
-  // Insert Image at Cursor Position
-  const insertImage = (url: string) => {
-    editor.chain().focus().insertContent(<img src="${url}" alt="Uploaded Image" />).run();
-  };
 
   // Handle Image Upload (Supports Multiple Images)
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +36,7 @@ export default function EditorToolbar({
       const reader = new FileReader();
       reader.onload = () => {
         if (typeof reader.result === 'string') {
-          insertImage(reader.result); // Insert as base64
+          editor.chain().focus().setImage({ src: reader.result }).run();
         }
       };
       reader.readAsDataURL(file);
@@ -125,36 +119,34 @@ export default function EditorToolbar({
           className="hidden"
         />
       </label>
-      {showVersions && (
+      
+      {versions && versions.length > 0 && (
         <div className="mt-2 border-t pt-2">
           <h4 className="font-semibold">Revision History</h4>
-          {versions && versions.length > 0 ? (
-            <div className="border-b p-2 bg-gray-200 version-toggle">
-              <ul className="list-disc pl-5">
-                {versions.map((version, idx) => (
-                  <li 
-                    key={idx} 
-                    onClick={() => onVersionSelect?.(version.content)}
-                    className="cursor-pointer hover:bg-gray-100 p-2 rounded-md"
-                    >
-                    <div className="flex items-center gap-2">
+          <div className="border-b p-2 bg-gray-200 version-toggle">
+            <ul className="list-disc pl-5">
+              {versions.map((version, idx) => (
+                <li 
+                  key={idx} 
+                  onClick={() => onVersionSelect?.(version.content)}
+                  className="cursor-pointer hover:bg-gray-100 p-2 rounded-md"
+                >
+                  <div className="flex items-center gap-2">
                     <span className="font-medium">Version {idx + 1}</span>
                     <span className="text-xs text-gray-200">
                       {new Date(version.timestamp).toLocaleTimeString()}
                     </span>
-                    </div>
-                    <div className="text-xs text-gray-200 truncate">
-                      {version.prompt}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : (
-            <p className="text-sm text-gray-200">No revisions available.</p>
-          )}
+                  </div>
+                  <div className="text-xs text-gray-200 truncate">
+                    {version.prompt}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
+      
       {/* Action Buttons */}
       <div className="flex gap-2 border-t pt-2">
         <button

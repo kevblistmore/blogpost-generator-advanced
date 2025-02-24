@@ -21,7 +21,7 @@ export default function FeedbackButtons({ content }: { content: string }) {
       if (!res.ok) throw new Error('Feedback submission failed');
       setSubmitted(true);
       toast.success('Feedback submitted!');
-    } catch (error) {
+    } catch {
       toast.error('Failed to submit feedback');
     }
   };

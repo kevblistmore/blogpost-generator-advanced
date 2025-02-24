@@ -13,4 +13,12 @@ module.exports = {
     },
     // Optionally specify test file patterns if you put them outside the default location:
     // testMatch: ['**/tests/**/*.test.ts?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
-  };
+    reactStrictMode: true,
+    // This suppresses the hydration error warnings in development
+    onDemandEntries: {
+        // period (in ms) where the server will keep pages in the buffer
+        maxInactiveAge: 25 * 1000,
+        // number of pages that should be kept simultaneously without being disposed
+        pagesBufferLength: 2,
+    },
+};

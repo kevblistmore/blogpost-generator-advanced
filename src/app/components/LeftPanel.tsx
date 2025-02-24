@@ -4,12 +4,10 @@
 import { MessageCircle, Lightbulb, Wrench } from "lucide-react";
 
 interface LeftPanelProps {
-  currentContent: string;
-  onRefine: (newContent: string) => void;
   onNestedPanelOpen: (panel: "feedback" | "highlights" | "suggestions") => void;
 }
 
-export default function LeftPanel({ currentContent, onRefine, onNestedPanelOpen }: LeftPanelProps) {
+export default function LeftPanel({ onNestedPanelOpen }: LeftPanelProps) {
   return (
     <div className="flex flex-col gap-4">
       <button

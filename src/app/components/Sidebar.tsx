@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-import LeftPanel from "./LeftPanel";
 import NestedPanel from "./NestedPanel";
 import { Editor } from "@tiptap/core";
 import { MessageCircle, Lightbulb, Wrench } from "lucide-react";

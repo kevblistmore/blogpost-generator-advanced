@@ -2,13 +2,24 @@
 'use client';
 import { format } from 'date-fns';
 
+// Enhanced Blog interface to match your actual data structure
+interface Blog {
+  _id: string;
+  title?: string;
+  topic?: string;
+  content: string;
+  createdAt: string | Date;
+  versions?: Array<{ content: string; prompt?: string; timestamp: string }>;
+  currentVersion?: number;
+}
+
 export default function HistoryPanel({
   blogs,
   onSelect,
   onDelete
 }: {
-  blogs: any[];
-  onSelect: (blog: any) => void;
+  blogs: Blog[];
+  onSelect: (blog: Blog) => void;
   onDelete: (id: string) => void;
 }) {
   return (

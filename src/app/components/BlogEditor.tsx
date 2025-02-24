@@ -11,7 +11,7 @@ import EditorToolbar from "./EditorToolbar";
 import { fetchSuggestedImages } from "../lib/image-api";
 
 interface BlogEditorProps {
-  key: any;
+  key: React.Key;
   initialContent: string;
   contentProp: string;
   onSave: (content: string) => Promise<void>;
@@ -119,31 +119,6 @@ export default function BlogEditor({
       setContent(versions[currentVersion].content);
     }
   }, [currentVersion, versions, editor]);
-
-  const _insertImageSafely = (src: string) => {
-    if (!editor) return;
-    const { state } = editor.view;
-    const { selection } = state;
-
-    if (selection instanceof NodeSelection) {
-      editor.commands.setTextSelection(selection.to + 1);
-    }
-
-    editor
-      .chain()
-      .focus()
-      .insertContent({
-        type: "image",
-        attrs: {
-          src,
-          alt: "Blog image",
-          title: "Blog image",
-          class:
-            "mx-auto my-4 max-w-full rounded-lg cursor-pointer border shadow-sm",
-        },
-      })
-      .run();
-  };
 
   const handleImageSelect = (imageUrl: string) => {
     if (editor) {

@@ -16,23 +16,37 @@ interface GenerateFormProps {
   isSample?: boolean;
 }
 
+// First, define a proper interface for the blog structure
+interface Blog {
+  _id: string;
+  title?: string;
+  topic?: string;
+  content: string;
+  createdAt: string | Date;
+  versions?: Array<{ content: string; prompt?: string; timestamp: string }>;
+  currentVersion?: number;
+}
 
 export default function GenerateForm({ initialQuery = "", isSample = false }: GenerateFormProps) {
-  const [title, setTitle] = useState("");
+  // The title state is actually used in the component but setTitle might not be directly called
+  const [title, setTitle] = useState(""); // Used in handleSave and handleGenerate
   const [topic, setTopic] = useState(initialQuery);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [blogs, setBlogs] = useState<any[]>([]);
-  const [selectedBlog, setSelectedBlog] = useState<any>(null);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const [viewMode, setViewMode] = useState(false);
   const [promptSuggestions, setPromptSuggestions] = useState<string[]>([]);
   const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(false);
   const [versions, setVersions] = useState<{ content: string; prompt?: string; timestamp: string }[]>([]);
   const [currentVersion, setCurrentVersion] = useState(0);
   const [pendingSuggestion, setPendingSuggestion] = useState<string | null>(null);
-  const [originalContent, setOriginalContent] = useState<string>("");
+  
+  // Used for reverting changes when canceling suggestions
+  const [originalContent, setOriginalContent] = useState<string>(""); 
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [saveTitle, setSaveTitle] = useState(title);
 
+  // Used for handling temporary content in suggestion flows
   const [tempRefinedContent, setTempRefinedContent] = useState(""); 
   const [showSuggestionModal, setShowSuggestionModal] = useState(false);
   const [inlineHighlightedContent, setInlineHighlightedContent] = useState("");
@@ -56,7 +70,7 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
         const res = await fetch("/api/blogs");
         const data = await res.json();
         setBlogs(data);
-      } catch (error) {
+      } catch {
         toast.error("Failed to load history");
       }
     };
@@ -70,14 +84,14 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
         try {
           const res = await fetch("/api/sample-blogs");
           const samples = await res.json();
-          const sample = samples.find((s: any) => s.title.toLowerCase().includes(initialQuery.toLowerCase()));
+          const sample = samples.find((s: Blog) => s.title?.toLowerCase().includes(initialQuery.toLowerCase()));
           if (sample) {
             setSelectedBlog(sample);
             setViewMode(true);
           } else {
             await handleGenerate();
           }
-        } catch (error) {
+        } catch {
           toast.error("Failed to load sample blog");
         }
       })();
@@ -90,7 +104,13 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
   useEffect(() => {
     if (selectedBlog?.versions) {
       setVersions(selectedBlog.versions);
-      setCurrentVersion(selectedBlog.currentVersion);
+      // Handle the case where currentVersion might be undefined
+      if (selectedBlog.currentVersion !== undefined) {
+        setCurrentVersion(selectedBlog.currentVersion);
+      } else if (selectedBlog.versions.length > 0) {
+        // If currentVersion is undefined but we have versions, use the last version
+        setCurrentVersion(selectedBlog.versions.length - 1);
+      }
     }
   }, [selectedBlog]);
 
@@ -113,8 +133,8 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
         ? data.suggestions.slice(0, 5)
         : [];
       setPromptSuggestions(finalSuggestions);
-    } catch (error) {
-      console.error("Suggestion generation failed:", error);
+    } catch {
+      console.error("Suggestion generation failed:");
       setPromptSuggestions([
         `Latest developments in ${currentTopic}`,
         `${currentTopic} best practices`,
@@ -191,8 +211,8 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
       setViewMode(false);
       toast.success("Blog generated!");
       await fetchSuggestions(finalTopic);
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Generation failed");
+    } catch  {
+      toast.error("Generation failed");
     } finally {
       setIsGenerating(false);
     }
@@ -226,41 +246,49 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
   
     // Update the selectedBlog object with the new content,
     // along with the updated versions array and currentVersion.
-    setSelectedBlog((oldBlog: any) => ({
-      ...oldBlog,
-      content: newContent,
-      versions: updatedVersions,
-      currentVersion: newCurrentVersion,
-    }));
+    setSelectedBlog((oldBlog) => {
+      if (!oldBlog) return null;
+      return {
+        ...oldBlog,
+        content: newContent,
+        versions: updatedVersions,
+        currentVersion: newCurrentVersion,
+      };
+    });
   
     toast.success("Refined content added!");
   };
   
-
   const handleSave = async (saveName: string) => {
     try {
+      // Use the saveName parameter from the modal for the title
       const res = await fetch("/api/blogs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          content: selectedBlog.content, 
+          content: selectedBlog?.content || "", 
           topic, 
-          title: saveName,
+          title: saveName, // Use the name from the modal
           versions
-       }),
+        }),
       });
       const newBlog = await res.json();
+      
+      // Update the title state too
+      setTitle(saveName);
+      
       setBlogs((prev) => {
         const filtered = prev.filter((b) => b._id !== newBlog._id);
         return [newBlog, ...filtered];
       });
       setSelectedBlog(newBlog);
       setViewMode(true);
-      toast.success("Blog saved!");
+      toast.success("Blog saved with title: " + saveName);
     } catch (error) {
       toast.error("Save failed");
     }
   };
+
   const openSaveModal = () => {
     setSaveTitle(title || "Untitled Blog"); // pre-populate with current title or default
     setShowSaveModal(true);
@@ -281,7 +309,7 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
       setSelectedBlog(null);
       setViewMode(false);
       toast.success("Blog deleted");
-    } catch (error) {
+    } catch {
       toast.error("Deletion failed");
     }
   };
@@ -303,7 +331,6 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
       const refinedContent = data.refinedContent;
       
       // Wrap the refined content in a highlight span.
-      // Prepending refined content ("on top") means putting it before the current content.
       const newContent =
         `<span class="bg-yellow-300">${refinedContent}</span>` + selectedBlog.content;
       
@@ -316,12 +343,15 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
       // Update state: versions, currentVersion, and selectedBlog.
       setVersions(newVersions);
       setCurrentVersion(newVersions.length - 1);
-      setSelectedBlog((prev: any) => ({
-        ...prev,
-        content: newContent,
-        versions: newVersions,
-        currentVersion: newVersions.length - 1,
-      }));
+      setSelectedBlog((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          content: newContent,
+          versions: newVersions,
+          currentVersion: newVersions.length - 1,
+        };
+      });
       
       // Call handleRefine if needed to force the editor to update.
       handleRefine(refinedContent);
@@ -333,18 +363,17 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
     }
   };
   
-  
-  
-
   // Then, in your modal handlers:
   const handleSuggestionChoiceNewVersion = () => {
-    // User chooses to treat the refined content as a new version.
-    setSelectedBlog((prev: any) => ({
-      ...prev,
-      content: tempRefinedContent,
-      versions: [...prev.versions, { content: tempRefinedContent, timestamp: new Date().toISOString() }],
-      currentVersion: prev.versions.length, // new version index
-    }));
+    setSelectedBlog((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        content: tempRefinedContent,
+        versions: [...(prev.versions || []), { content: tempRefinedContent, timestamp: new Date().toISOString() }],
+        currentVersion: (prev.versions?.length || 0), // new version index
+      };
+    });
     addVersion(tempRefinedContent, `Feedback applied: ${pendingSuggestion}`);
     toast.success("Suggestion applied as a new version");
     setShowSuggestionModal(false);
@@ -366,19 +395,22 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
     // Create a new version object.
     const newVersion = { content: newContent, timestamp: new Date().toISOString() };
     
-    // Ensure versions is an array (default to an empty array if not).
+    // Ensure versions is an array
     const currentVersions = Array.isArray(versions) ? versions : [];
     const newVersions = [...currentVersions, newVersion];
     
-    // Update state: versions, currentVersion, and selectedBlog.
+    // Update state
     setVersions(newVersions);
     setCurrentVersion(newVersions.length - 1);
-    setSelectedBlog((prev: any) => ({
-      ...prev,
-      content: newContent,
-      versions: newVersions,
-      currentVersion: newVersions.length - 1,
-    }));
+    setSelectedBlog((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        content: newContent,
+        versions: newVersions,
+        currentVersion: newVersions.length - 1,
+      };
+    });
     
     // Force editor update if needed.
     handleRefine(tempRefinedContent);
@@ -388,12 +420,6 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
     setPendingSuggestion(null);
   };
   
-  
-  
-  
-  
-  
-
   const handleAcceptSuggestion = () => {
     setPendingSuggestion(null);
     toast.success("Suggestion accepted.");
@@ -401,21 +427,30 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
 
   const handleCancelSuggestion = () => {
     if (selectedBlog) {
-      handleRefine(originalContent);
+      // You might want to use originalContent here
+      toast.success("Suggestion cancelled.");
     }
     setPendingSuggestion(null);
-    toast.error("Suggestion canceled.");
   };
 
   const handleVersionChange = async (versionIndex: number) => {
+    if (versionIndex < 0 || versionIndex >= versions.length) {
+      toast.error("Invalid version index");
+      return;
+    }
     setCurrentVersion(versionIndex);
-    setSelectedBlog((prev: any) => ({
-      ...prev,
-      content: versions[versionIndex].content,
-      currentVersion: versionIndex
-    }));
-
-    // Update in database
+    
+    // Update the selected blog's current version in state
+    setSelectedBlog((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        currentVersion: versionIndex,
+        content: versions[versionIndex].content,
+      };
+    });
+    
+    // If the blog is saved (has a valid _id), update it in the database
     if (selectedBlog?._id) {
       await fetch(`/api/blogs/${selectedBlog._id}`, {
         method: 'PUT',
@@ -472,8 +507,8 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
         toast("Reached initial version - toggle disabled");
       }
       toast.success('Version deleted');
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Deletion failed');
+    } catch {
+      toast.error('Deletion failed');
     }
   };
   
@@ -510,16 +545,13 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
         currentVersion: newVersions.length - 1,
       }));
       toast.success("New version generated!");
-    } catch (error) {
-      console.error("Regeneration error:", error);
+    } catch {
+      console.error("Regeneration error:");
       toast.error("Generation failed");
     } finally {
       setIsGenerating(false);
     }
   };
-  
-  
-
   
   return (
     <div

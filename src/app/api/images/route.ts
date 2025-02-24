@@ -1,5 +1,15 @@
 import { NextResponse } from 'next/server';
 
+interface PexelsPhoto {
+  src: {
+    medium: string;
+  };
+}
+
+interface PexelsResponse {
+  photos: PexelsPhoto[];
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const topic = searchParams.get('topic') || 'technology';
@@ -15,11 +25,11 @@ export async function GET(req: Request) {
     
     if (!res.ok) throw new Error('Image fetch failed');
     
-    const data = await res.json();
-    const urls = data.photos?.map((photo: { src: { medium: string } }) => photo.src.medium) || [];
+    const data = await res.json() as PexelsResponse;
+    const urls = data.photos?.map(photo => photo.src.medium) || [];
     
     return NextResponse.json({ urls });
-  } catch (_error) {
+  } catch {
     return NextResponse.json(
       { urls: [] },
       { status: 200 }

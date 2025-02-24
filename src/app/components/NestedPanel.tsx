@@ -1,23 +1,22 @@
 // src/app/components/NestedPanel.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
 
 interface NestedPanelProps {
   type: "feedback" | "highlights" | "suggestions";
   currentContent: string;
-  onRefine: (newContent: string) => void;
+  onRefine?: (newContent: string) => void;
   onClose: () => void;
-  onSuggestionSelect?: (suggestion: string) => void;
+  onSuggestionSelect?: (suggestion: string) => Promise<void>;
   onAppendRefine?: (refined: string) => void;
 }
 
 export default function NestedPanel({
   type,
   currentContent,
-  onRefine,
   onClose,
   onSuggestionSelect,
   onAppendRefine,
@@ -27,15 +26,7 @@ export default function NestedPanel({
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (type === "highlights") {
-      fetchHighlights();
-    } else if (type === "suggestions") {
-      fetchSuggestions();
-    }
-  }, [type]);
-
-  const fetchHighlights = async () => {
+  const fetchHighlights = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await fetch("/api/highlights", {
@@ -49,14 +40,14 @@ export default function NestedPanel({
       } else {
         setHighlights(null);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to fetch highlights");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentContent]);
 
-  const fetchSuggestions = async () => {
+  const fetchSuggestions = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await fetch("/api/suggestions-improvements", {
@@ -70,17 +61,25 @@ export default function NestedPanel({
       } else {
         setSuggestions([]);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to fetch suggestions");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentContent]);
 
-  const applySuggestion = (suggestion: string) => {
+  useEffect(() => {
+    if (type === "highlights") {
+      fetchHighlights();
+    } else if (type === "suggestions") {
+      fetchSuggestions();
+    }
+  }, [type, fetchHighlights, fetchSuggestions]);
+
+  const applySuggestion = async (suggestion: string) => {
     if (onSuggestionSelect) {
       toast.loading("Applying suggestion...");
-      onSuggestionSelect(suggestion);
+      await onSuggestionSelect(suggestion);
       toast.dismiss();
       toast.success("Suggestion applied! Please confirm or cancel.");
     }

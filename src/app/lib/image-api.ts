@@ -26,7 +26,9 @@ export async function fetchSuggestedImages(topic: string): Promise<string[]> {
     );
     
     const data = await res.json();
-    const urls = data.results?.map((img: any) => img.urls.regular) || [];
+    
+    // Use a type assertion instead of changing the underlying structure
+    const urls = data.results?.map((img: { urls: { regular: string } }) => img.urls.regular) || [];
     
     return new Response(JSON.stringify({ urls }));
   }
