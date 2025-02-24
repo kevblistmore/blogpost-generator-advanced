@@ -16,6 +16,7 @@ interface GenerateFormProps {
   isSample?: boolean;
 }
 
+
 export default function GenerateForm({ initialQuery = "", isSample = false }: GenerateFormProps) {
   const [title, setTitle] = useState("");
   const [topic, setTopic] = useState(initialQuery);
