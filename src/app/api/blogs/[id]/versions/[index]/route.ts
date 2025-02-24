@@ -1,55 +1,57 @@
+import { NextResponse } from 'next/server';
 import { connectDB } from '../../../../../lib/db';
 import { Blog } from '../../../../../lib/db';
-import { NextResponse } from 'next/server';
 
 export async function DELETE(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string; index: string } }
 ) {
   try {
     await connectDB();
-    // Ensure params are available:
-    const { id, index } = await Promise.resolve(params);
-
-    // Check if id is a valid ObjectId (24 hex characters)
-    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-      return NextResponse.json(
-        { success: true, message: "Temporary blog - nothing to delete" },
-        { status: 200 }
-      );
-    }
-
-    // Parse index
-    const versionIndex = parseInt(index);
-    if (isNaN(versionIndex) || versionIndex < 0) {
-      return NextResponse.json({ error: 'Invalid version index' }, { status: 400 });
-    }
-
-    // Find the blog by id
-    const blog = await Blog.findById(id);
+    
+    const blogId = params.id;
+    const versionIndex = parseInt(params.index);
+    
+    // Find the blog
+    const blog = await Blog.findById(blogId);
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
-
-    // Prevent deleting the original version (index 0)
-    if (versionIndex === 0) {
+    
+    // Check if versions exist and index is valid
+    if (!blog.versions || blog.versions.length <= 1) {
       return NextResponse.json(
-        { error: 'Cannot delete original version' },
+        { error: 'Cannot delete the only version' },
         { status: 400 }
       );
     }
-
-    console.log("Deleting version", versionIndex, "from blog ID:", id);
-
+    
+    if (versionIndex < 0 || versionIndex >= blog.versions.length) {
+      return NextResponse.json(
+        { error: 'Invalid version index' },
+        { status: 400 }
+      );
+    }
+    
     // Remove the specified version
     blog.versions.splice(versionIndex, 1);
-    // Adjust currentVersion if necessary
-    blog.currentVersion = Math.min(blog.currentVersion, blog.versions.length - 1);
+    
+    // Update currentVersion if needed
+    if (blog.currentVersion >= blog.versions.length) {
+      blog.currentVersion = blog.versions.length - 1;
+    }
+    
+    // Update blog content to match the current version
+    blog.content = blog.versions[blog.currentVersion].content;
+    
     await blog.save();
-
-    return NextResponse.json(blog.toObject());
+    
+    return NextResponse.json(blog);
   } catch (error) {
-    console.error("Error deleting version:", error);
-    return NextResponse.json({ error: 'Failed to delete version' }, { status: 500 });
+    console.error('Error deleting version:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete version' },
+      { status: 500 }
+    );
   }
 }
