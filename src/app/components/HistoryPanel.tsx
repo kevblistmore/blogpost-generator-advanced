@@ -1,4 +1,3 @@
-
 // components/HistoryPanel.tsx
 'use client';
 import { format } from 'date-fns';
@@ -13,21 +12,21 @@ export default function HistoryPanel({
   onDelete: (id: string) => void;
 }) {
   return (
-    <div className="bg-white rounded-lg shadow p-4 h-[calc(100vh-200px)] overflow-y-auto">
-      <h3 className="text-lg font-semibold mb-4">Blog History</h3>
+    <div className="panel-medium-teal rounded-lg shadow p-4 h-[calc(100vh-200px)] overflow-y-auto">
+      <h3 className="text-lg font-semibold mb-4 text-[var(--light-teal)]">Blog History</h3>
       <div className="space-y-3">
         {blogs.map(blog => (
           <div
             key={blog._id}
-            className="group relative p-3 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors"
+            className="group relative p-3 rounded-lg cursor-pointer transition-colors history-item-gradient hover:opacity-90"
             onClick={() => onSelect(blog)}
           >
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm font-medium line-clamp-2 mb-1">
+                <p className="text-sm font-medium line-clamp-2 mb-1 text-[var(--light-teal)]">
                   {blog.title || blog.topic || blog.content.substring(0, 60)}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-[var(--light-teal)]">
                   {format(new Date(blog.createdAt), 'MMM dd, HH:mm')}
                 </p>
               </div>
@@ -36,7 +35,7 @@ export default function HistoryPanel({
                   e.stopPropagation();
                   onDelete(blog._id);
                 }}
-                className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 px-2"
+                className="opacity-0 group-hover:opacity-100 text-red-600 hover:text-red-800 px-2"
               >
                 Delete
               </button>

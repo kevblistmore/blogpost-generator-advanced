@@ -74,7 +74,7 @@ export default function EditorToolbar({
   ];
 
   return (
-    <div className="border-b p-2 bg-gray-50 space-y-4">
+    <div className="border-b p-2 bg-gray-200 space-y-4">
       {/* Formatting Buttons */}
       <div className="flex flex-wrap gap-2">
         {buttons.map((btn, index) => (
@@ -83,7 +83,7 @@ export default function EditorToolbar({
             onClick={btn.onClick}
             className={cn(
               'px-3 py-1 text-sm rounded-md transition-colors',
-              btn.active ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 hover:bg-gray-200'
+              btn.active ? 'bg-black-100 text-blue-600' : 'bg-gray-100 hover:bg-gray-200'
             )}
           >
             {btn.label}
@@ -129,7 +129,7 @@ export default function EditorToolbar({
         <div className="mt-2 border-t pt-2">
           <h4 className="font-semibold">Revision History</h4>
           {versions && versions.length > 0 ? (
-            <div className="border-b p-2 bg-gray-50 version-toggle">
+            <div className="border-b p-2 bg-gray-200 version-toggle">
               <ul className="list-disc pl-5">
                 {versions.map((version, idx) => (
                   <li 
@@ -139,11 +139,11 @@ export default function EditorToolbar({
                     >
                     <div className="flex items-center gap-2">
                     <span className="font-medium">Version {idx + 1}</span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-200">
                       {new Date(version.timestamp).toLocaleTimeString()}
                     </span>
                     </div>
-                    <div className="text-xs text-gray-500 truncate">
+                    <div className="text-xs text-gray-200 truncate">
                       {version.prompt}
                     </div>
                   </li>
@@ -151,7 +151,7 @@ export default function EditorToolbar({
               </ul>
             </div>
           ) : (
-            <p className="text-sm text-gray-500">No revisions available.</p>
+            <p className="text-sm text-gray-200">No revisions available.</p>
           )}
         </div>
       )}
@@ -159,19 +159,19 @@ export default function EditorToolbar({
       <div className="flex gap-2 border-t pt-2">
         <button
           onClick={() => onRegenerate?.()}
-          className="flex-1 px-3 py-1.5 text-sm rounded-md bg-green-100 text-green-600 hover:bg-green-200"
+          className="flex-1 px-3 py-1.5 text-sm rounded-md bg-teal-800 text-gray-200 hover:bg-green-200"
         >
           Regenerate
         </button>
         <button
           onClick={onSave}
-          className="flex-1 px-3 py-1.5 text-sm rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200"
+          className="flex-1 px-3 py-1.5 text-sm rounded-md bg-teal-600 text-gray-200 hover:bg-blue-200"
         >
           Save
         </button>
         <button
           onClick={() => navigator.clipboard.writeText(editor.getHTML())}
-          className="flex-1 px-3 py-1.5 text-sm rounded-md bg-gray-100 hover:bg-gray-200"
+          className="flex-1 px-3 py-1.5 text-sm rounded-md bg-teal-400 hover:bg-gray-200"
         >
           📋 Copy
         </button>

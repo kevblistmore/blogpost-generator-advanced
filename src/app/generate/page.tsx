@@ -9,17 +9,29 @@ export default function GeneratePage() {
   const isSample = searchParams.get("sample") === "true";
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <section className="text-center mb-12">
-          <h1 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            AI Blog Generator
-          </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Transform your ideas into polished blog posts with AI-powered writing assistance.
-          </p>
-        </section>
-        <GenerateForm initialQuery={initialQuery} isSample={isSample} />
+    <main className="min-h-screen">
+      {/* Top Section - hero-dark */}
+      <div className="hero-dark px-4 py-8">
+        <div className="max-w-7xl mx-auto pl-14">
+          <section className="text-left mt-20 mb-0">
+            <h1 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              AI Blog Generator
+            </h1>
+            <p className="text-gray-300 text-lg max-w-2xl">
+              Transform your ideas into polished blog posts with AI-powered writing assistance.
+            </p>
+          </section>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="w-full border-t border-gray-200" />
+
+      {/* Main Content - home-gradient */}
+      <div className="home-gradient px-4 py-12">
+        <div className="max-w-7xl mx-auto">
+          <GenerateForm initialQuery={initialQuery} isSample={isSample} />
+        </div>
       </div>
     </main>
   );

@@ -182,3 +182,52 @@ body {
 .hero-dark p {
   color: rgba(255, 255, 255, 0.8); /* 80% white for the subheading */
 }
+
+/* You can either leverage your existing --dark-teal-* variables with Tailwind classes
+   or add custom CSS classes like this: */
+
+.editor-dark {
+  background-color: var(--dark-teal-2);
+  color: var(--light-teal);
+}
+
+/* The .prose child elements might need explicit color overrides: */
+.editor-dark .prose {
+  color: var(--light-teal);
+}
+
+.sidebar-dark {
+  background-color: var(--dark-teal-1);
+  color: var(--light-teal);
+}
+
+.history-dark {
+  background-color: var(--dark-teal-1);
+  color: var(--light-teal);
+}
+
+/* For panels with a lighter teal background and darker accent text */
+.panel-medium-teal {
+  background-color: var(--medium-teal); /* #024950 */
+  color: #6c2e1e; /* darker variant of --accent-copper (#964734) */
+}
+
+/* For history items with a gradient from dark-teal-2 to medium-teal */
+.history-item-gradient {
+  background: linear-gradient(
+    to bottom,
+    var(--dark-teal-2) 40%,
+    var(--medium-teal) 100%
+  );
+}
+
+/* For the editor container off-white background */
+.editor-offwhite {
+  background-color: rgba(240, 240, 240, 0.5); /* Changed to a greyish white with 50% opacity */
+  color: #000000; /* black text */
+}
+
+.panel-background {
+  background-color: var(--medium-teal); /* Use the same color as the background */
+  color: var(--light-teal); /* Ensure text is readable */
+}

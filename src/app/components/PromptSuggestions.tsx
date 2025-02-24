@@ -13,7 +13,7 @@ export function PromptSuggestions({
   isLoading = false 
 }: PromptSuggestionsProps) {
   return (
-    <div className="mt-4 space-y-2 min-h-[100px]">
+    <div className="mt-4 space-y-2 min-h-[100px] text-black">
       <p className="text-sm text-gray-500">Related topics you might like:</p>
       <div className="flex flex-wrap gap-2">
         {isLoading ? (

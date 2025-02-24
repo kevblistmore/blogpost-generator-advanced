@@ -533,7 +533,7 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
       "
     >
       {/* LEFT COLUMN: Blog History Panel */}
-      <div className="pl-4 bg-gray-100">
+      <div className="pl-4 bg-transparent">
         <HistoryPanel
           blogs={blogs}
           onSelect={(blog) => {
@@ -568,24 +568,36 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
           </div>
         )}
   
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-gray-200 rounded-lg shadow p-6">
           <div className="mb-4">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               className="flex flex-col gap-4"
             >
-              <div className="flex gap-4 items-center">
+              <div className="relative">
                 <input
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder="Enter blog topic..."
-                  className="flex-1 p-3 border rounded-lg"
+                  className="search-input w-full p-4 pr-20 rounded-lg focus:outline-none text-black"
                 />
                 <button
                   onClick={() => handleGenerate()}
                   disabled={isGenerating}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  className="
+                    absolute
+                    right-2
+                    top-1/2
+                    -translate-y-1/2
+                    px-6
+                    py-2
+                    rounded-md
+                    bg-[#964734]
+                    text-white
+                    hover:bg-green-600
+                    disabled:opacity-50
+                  "
                 >
                   {isGenerating ? "Generating..." : "Generate"}
                 </button>
@@ -593,7 +605,7 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
               {(promptSuggestions.length > 0 || isFetchingSuggestions) && (
                 <div className="mt-2">
                   {isFetchingSuggestions ? (
-                    <div className="text-sm text-gray-500">Loading suggestions...</div>
+                    <div className="text-sm text-black">Loading suggestions...</div>
                   ) : (
                     <PromptSuggestions
                       suggestions={promptSuggestions}
@@ -609,7 +621,10 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
   
           {selectedBlog ? (
             <>
-              <h1 className="text-3xl font-bold mb-4">{selectedBlog.title}</h1>
+              <div className="h-1"></div>
+              <div className="border-b border-teal-800 my-4"></div>
+              <div className="h-1"></div>
+              {/* <h1 className="text-3xl font-bold mb-4">{selectedBlog.title}</h1> */}
               <BlogEditor
                 key={selectedBlog._id}
                 initialContent={selectedBlog.content}
@@ -627,7 +642,7 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
               />
             </>
           ) : (
-            <div className="text-center text-gray-500 py-10">
+            <div className="text-center text-gray-200 py-10">
               No blog selected. Generate a new blog to begin.
             </div>
           )}
@@ -635,7 +650,7 @@ export default function GenerateForm({ initialQuery = "", isSample = false }: Ge
       </div>
   
       {/* RIGHT COLUMN: Sidebar */}
-      <div className="bg-gray-50 p-4 relative">
+      <div className="bg-transparent p-4 relative">
         <Sidebar
           currentContent={selectedBlog?.content || ""}
           onRefine={handleRefine}
