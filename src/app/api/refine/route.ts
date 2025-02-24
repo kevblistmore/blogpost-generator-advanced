@@ -11,11 +11,11 @@ export async function POST(request: Request) {
   try {
     const { content, feedback } = await request.json();
     const prompt = `Here is a blog post:
-${content}
+        ${content}
 
-User feedback: ${feedback}
+        User feedback: ${feedback}
 
-Please provide a refined version of the blog post based on the feedback.`;
+        Please provide a refined version of the blog post based on the feedback.`;
 
     const response = await openai.createChatCompletion({
       model: "gpt-4o",
@@ -24,6 +24,7 @@ Please provide a refined version of the blog post based on the feedback.`;
     });
 
     const refinedContent = response.data.choices[0]?.message?.content || "";
+    console.log("Refined content:", refinedContent);
     return NextResponse.json({ 
       refinedContent,
       previousContent: content // Include previous content for versioning

@@ -1,5 +1,3 @@
-
-
 //src/app/components/EditorToolbar.tsx
 
 'use client';
@@ -91,12 +89,6 @@ export default function EditorToolbar({
             {btn.label}
           </button>
         ))}
-        <button
-          onClick={() => setShowVersions(!showVersions)}
-          className="px-3 py-1 text-sm rounded-md bg-yellow-100 text-yellow-600 hover:bg-yellow-200"
-        >
-          {showVersions ? "Hide Versions" : "Show Versions"}
-        </button>
       </div>
 
       {/* Suggested Images */}

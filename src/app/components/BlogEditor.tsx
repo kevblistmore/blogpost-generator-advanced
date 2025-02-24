@@ -24,6 +24,7 @@ interface BlogEditorProps {
   currentVersion: number;
   onVersionChange: (versionIndex: number) => void;
   onVersionDelete: (versionIndex: number) => void;
+  
 }
 
 export default function BlogEditor({

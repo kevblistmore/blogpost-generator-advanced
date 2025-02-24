@@ -5,6 +5,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --dark-teal-1: #001f21;
+  --dark-teal-2: #003135;
+  --medium-teal: #024950;
+  --bright-teal: #0FA4AF;
+  --light-teal: #AFDDE5;
+  --accent-copper: #964734;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -61,4 +67,118 @@ body {
 /* Prevent content from creating minimum widths */
 .min-w-0 {
   min-width: 0;
+}
+
+/* Two Boxes */
+.p-3.border.rounded-lg.text-center.mx-auto.max-w-lg,
+.p-4.border.rounded-lg.text-center.max-w-lg.mx-auto {
+  background-color: #333; /* Darker background */
+  color: #fff; /* White font color */
+}
+
+/* Blog Sample Background */
+.group.flex.flex-col.h-full.rounded-lg.overflow-hidden.shadow-md.hover\:shadow-lg.transition-all .p-3.bg-white {
+  background-color: #444; /* Darker background */
+  color: #fff; /* White font color */
+}
+
+/* Dark Theme for Home Page */
+.home-dark {
+  background-color: #003135; /* Dark teal */
+  color: #AFDDE5; /* Light teal for text */
+}
+
+.input-dark {
+  background-color: #024950; /* Medium teal */
+  color: #AFDDE5; /* Light teal for text */
+  border-color: #0FA4AF; /* Bright teal for focus */
+}
+
+.button-dark {
+  background-color: #964734; /* Reddish-brown */
+  color: #ffffff; /* White text */
+}
+
+.button-dark:hover {
+  background-color: #AFDDE5; /* Light teal on hover */
+}
+
+
+
+/* Styled Boxes */
+.feature-box {
+  background: rgba(15, 164, 175, 0.2); /* Transparent bright teal */
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--bright-teal);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  color: var(--light-teal);
+}
+
+.feature-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(15, 164, 175, 0.3);
+}
+
+/* Search Input Styling */
+.search-input {
+  background: rgba(2, 73, 80, 0.3);
+  border: 2px solid var(--bright-teal);
+  color: rgba(255, 255, 255, 0.9); /* 90% white for the input text */
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  background: rgba(2, 73, 80, 0.5);
+  box-shadow: 0 0 0 3px rgba(15, 164, 175, 0.3);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.9); /* 90% white for placeholder text */
+}
+
+/* Search Button Styling */
+.search-button {
+  background: var(--bright-teal);
+  color: var(--dark-teal-1);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  background: var(--light-teal);
+  transform: translateY(-1px);
+}
+
+/* Gradient Background for Home Page */
+.home-gradient {
+  background: linear-gradient(
+    to bottom,
+    #000000 0%, /* Darkest black at the top */
+    var(--dark-teal-1) 30%, /* Dark teal */
+    var(--dark-teal-2) 60%, /* Medium teal */
+    var(--medium-teal) 100% /* Current tone at the bottom */
+  );
+  min-height: 100vh;
+  color: var(--light-teal);
+}
+
+.hero-dark {
+  background: linear-gradient(
+    to bottom,
+    #000000 0%,           /* Top: pure black */
+    #000000 20%,          /* Maintain black for a bit */
+    #000000 100%          /* Bottom: pure black (matching home-gradient's top) */
+  );
+  color: var(--light-teal);
+  padding: 2rem 0;
+}
+
+.hero-dark h1 {
+  color: #ffffff; /* White for the main heading */
+}
+
+.hero-dark p {
+  color: rgba(255, 255, 255, 0.8); /* 80% white for the subheading */
 }

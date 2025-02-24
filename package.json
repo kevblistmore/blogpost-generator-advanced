@@ -16,6 +16,7 @@
     "@tiptap/starter-kit": "^2.11.5",
     "@types/mongoose": "^5.11.96",
     "date-fns": "^4.1.0",
+    "diff": "^7.0.0",
     "framer-motion": "^12.4.7",
     "lucide-react": "^0.475.0",
     "marked": "^15.0.7",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/date-fns": "^2.5.3",
+    "@types/diff": "^7.0.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
