@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     await blog.save();
     
     return NextResponse.json(blog.toObject());
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Failed to save blog' },
       { status: 500 }

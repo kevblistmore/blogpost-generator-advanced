@@ -25,7 +25,7 @@ export default function EditorToolbar({
   versions,
   onVersionSelect,
 }: EditorToolbarProps) {
-  const [showVersions, setShowVersions] = useState(false);
+  const [showVersions, _setShowVersions] = useState(false);
   if (!editor) return null;
 
   // Insert Image at Cursor Position

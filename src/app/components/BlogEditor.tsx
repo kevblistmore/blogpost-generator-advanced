@@ -120,7 +120,7 @@ export default function BlogEditor({
     }
   }, [currentVersion, versions, editor]);
 
-  const insertImageSafely = (src: string) => {
+  const _insertImageSafely = (src: string) => {
     if (!editor) return;
     const { state } = editor.view;
     const { selection } = state;

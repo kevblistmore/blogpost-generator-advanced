@@ -16,10 +16,10 @@ export async function GET(req: Request) {
     if (!res.ok) throw new Error('Image fetch failed');
     
     const data = await res.json();
-    const urls = data.photos?.map((photo: any) => photo.src.medium) || [];
+    const urls = data.photos?.map((photo: { src: { medium: string } }) => photo.src.medium) || [];
     
     return NextResponse.json({ urls });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { urls: [] },
       { status: 200 }
