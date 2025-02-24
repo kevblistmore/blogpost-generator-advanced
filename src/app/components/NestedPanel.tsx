@@ -132,12 +132,12 @@ export default function NestedPanel({
         className="absolute left-full top-0 z-50 w-64 h-full bg-white shadow-2xl rounded-l-2xl p-4 overflow-y-auto transition-all duration-300 ease-in-out"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold capitalize">{type}</h2>
+          <h2 className="text-lg font-bold capitalize text-black">{type}</h2>
           <button onClick={onClose} className="text-gray-600">Close</button>
         </div>
 
         {type === "feedback" && (
-          <div>
+          <div className="text-black">
             <textarea
               className="w-full h-24 p-2 border rounded-md"
               placeholder="Enter your feedback..."
@@ -157,7 +157,7 @@ export default function NestedPanel({
         )}
 
         {type === "highlights" && (
-          <div>
+          <div className="text-black">
             {isLoading ? (
               <p>Loading...</p>
             ) : highlights ? (
@@ -194,7 +194,7 @@ export default function NestedPanel({
         )}
 
         {type === "suggestions" && (
-          <div>
+          <div className="text-black">
             {isLoading ? (
               <p>Loading...</p>
             ) : suggestions.length > 0 ? (

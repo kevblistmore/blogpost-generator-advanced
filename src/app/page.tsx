@@ -70,8 +70,9 @@ export default function Home() {
         <div className="hero-dark px-4 py-8">
           <div className="max-w-7xl mx-auto pl-14">
             <section className="text-left mt-20 mb-0">
-              <h1 className="text-6xl font-extrabold mb-4 leading-tight">
-                AI Blog Generator
+              <h1 className="text-6xl font-extrabold mb-4 leading-tight flex items-baseline">
+                AI Blog Generator 
+                <span className="inline-block w-3 h-3 bg-white rounded-full ml-2"></span>
               </h1>
               <p className="text-lg max-w-2xl">
                 Transform your ideas into polished blog posts with AI-powered writing assistance.
