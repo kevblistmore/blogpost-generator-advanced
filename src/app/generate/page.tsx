@@ -2,12 +2,18 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import GenerateForm from "../components/GenerateForm";
+import { Suspense } from "react";
 
-export default function GeneratePage() {
+// Component that uses useSearchParams
+function GenerateContent() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
   const isSample = searchParams.get("sample") === "true";
 
+  return <GenerateForm initialQuery={initialQuery} isSample={isSample} />;
+}
+
+export default function GeneratePage() {
   return (
     <main className="min-h-screen">
       {/* Top Section - hero-dark */}
@@ -30,7 +36,9 @@ export default function GeneratePage() {
       {/* Main Content - home-gradient */}
       <div className="home-gradient px-4 py-12">
         <div className="max-w-7xl mx-auto">
-          <GenerateForm initialQuery={initialQuery} isSample={isSample} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <GenerateContent />
+          </Suspense>
         </div>
       </div>
     </main>
