@@ -1,16 +1,17 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '../../../../../lib/db';
 import { Blog } from '../../../../../lib/db';
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string; index: string } }
-) {
+export async function DELETE(request: NextRequest) {
+  const url = new URL(request.url);
+  // e.g.  /api/blogs/123/versions/2
+  const pathSegments = url.pathname.split('/');
+  // pathSegments might be ["", "api", "blogs", "123", "versions", "2"]
+  const blogId = pathSegments[3];
+  const versionIndex = parseInt(pathSegments[5], 10);
+
   try {
     await connectDB();
-    
-    const blogId = params.id;
-    const versionIndex = parseInt(params.index);
     
     // Find the blog
     const blog = await Blog.findById(blogId);
