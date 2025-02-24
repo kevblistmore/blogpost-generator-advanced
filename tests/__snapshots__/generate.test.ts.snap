@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`POST /api/generate (Advanced Tests) snapshot test for stable AI output 1`] = `
+"
+Mocked AI blog output with Markdown
+# Title
+- bullet A
+- bullet B
+"
+`;

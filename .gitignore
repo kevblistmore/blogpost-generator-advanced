@@ -42,3 +42,5 @@ next-env.d.ts
 
 #env variable file
 .env.local
+
+explainations.txt

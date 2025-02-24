@@ -9,7 +9,11 @@ const openai = new OpenAIApi(configuration);
 
 export async function POST(request: Request) {
   try {
-    const { topic, title } = await request.json();
+    const body = await request.text();
+    if (!body) {
+      throw new Error('Request body is empty');
+    }
+    const { topic, title } = JSON.parse(body);
 
     // More explicit markdown prompt:
     const promptText = `
