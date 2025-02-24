@@ -11,7 +11,6 @@ import EditorToolbar from "./EditorToolbar";
 import { fetchSuggestedImages } from "../lib/image-api";
 
 interface BlogEditorProps {
-  key: any;
   initialContent: string;
   contentProp: string;
   onSave: (content: string) => Promise<void>;
@@ -213,22 +212,20 @@ export default function BlogEditor({
           </div>
         </motion.div>
 
-        {viewMode && (
-          <div className="p-4 border-t flex justify-between items-center">
-            <div className="flex gap-4">
-              <button
-                onClick={() => onViewModeChange(false)}
-                className="text-blue-600 hover:underline"
-              >
-                Edit Post
-              </button>
-              <button onClick={onDelete} className="text-red-600 hover:underline">
-                Delete Post
-              </button>
-            </div>
-            <FeedbackButtons content={content} />
+        <div className="p-4 border-t flex justify-between items-center">
+          <div className="flex gap-4">
+            <button
+              onClick={() => onViewModeChange(false)}
+              className="text-blue-600 hover:underline"
+            >
+              Edit Post
+            </button>
+            <button onClick={onDelete} className="text-red-600 hover:underline">
+              Delete Post
+            </button>
           </div>
-        )}
+          <FeedbackButtons content={content} />
+        </div>
       </div>
 
       <AnimatePresence>

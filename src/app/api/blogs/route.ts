@@ -19,7 +19,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const { content, topic, title, versions } = await req.json();
+    const { content, topic, title /*, versions */ } = await req.json();
     await connectDB();
     
     // Generate a slug using title (or fallback to topic). Append a timestamp for uniqueness.
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       topic,
       title,
       slug: uniqueSlug, // set the slug field
-      versions: [{ content, timestamp: new Date(), isActive: true }],
+      // versions: [{ content, timestamp: new Date(), isActive: true }], // If you need this field
       currentVersion: 0,
       createdAt: new Date(),
       images: []
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     await blog.save();
     
     return NextResponse.json(blog.toObject());
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Failed to save blog' },
       { status: 500 }

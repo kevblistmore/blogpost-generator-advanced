@@ -26,7 +26,17 @@ export async function fetchSuggestedImages(topic: string): Promise<string[]> {
     );
     
     const data = await res.json();
-    const urls = data.results?.map((img: any) => img.urls.regular) || [];
+
+    // Define interface for image API result structure
+    interface ImageResult {
+      urls: {
+        regular: string;
+        // Add other URL types if needed (small, thumb, etc.)
+      };
+      // Add other properties if needed (id, description, etc.)
+    }
+
+    const urls = data.results?.map((img: ImageResult) => img.urls.regular) || [];
     
     return new Response(JSON.stringify({ urls }));
   }
