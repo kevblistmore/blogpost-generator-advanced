@@ -161,7 +161,8 @@ Throughout the implementation, we account for potential failures and anomalies:
 5. Interact with the API:
    - /api/generate: POST with a JSON payload (topic/title) to generate an initial blog draft.  
    - /api/refine: POST with JSON payload (content and feedback) to refine an existing blog post.  
-   - /api/suggestions-improvements: POST with JSON payload (content) to receive suggested improvements.  
+   - /api/suggestions-improvements: POST with JSON payload (content) to receive suggested improvements.
+   - /api/feedbaack: This creates another version of current blog with suggested user improvements
    - Additional routes or UI features can be accessed via your browser at http://localhost:3000 or integrated with a front-end.
 
 6. Deployment:
