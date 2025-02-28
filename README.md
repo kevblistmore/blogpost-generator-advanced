@@ -144,7 +144,7 @@ Throughout the implementation, we account for potential failures and anomalies:
 ## 4. Setup Instructions
 
 1. Clone the Repository:
-   » git clone https://your-repo-url-here.git  
+   » git clone [https://your-repo-url-here.git](https://github.com/kevblistmore/blogpost-generator-advanced.git)  
 
 2. Install Dependencies:
    » cd your-repo-folder  
